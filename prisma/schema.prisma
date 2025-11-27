@@ -1,0 +1,398 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ユーザーの基本情報（患者・クリニック・管理者共通）
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 患者情報
+  patient Patient?
+  // クリニック情報
+  clinic  Clinic?
+  // 管理者情報
+  admin   Admin?
+
+  @@map("users")
+}
+
+// UserRole: PATIENT, CLINIC, ADMIN
+
+// 患者情報
+model Patient {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName   String
+  lastName    String
+  firstNameKana String
+  lastNameKana String
+  birthDate   DateTime
+  gender      String
+  phone       String
+  zipCode     String
+  prefecture  String
+  city        String
+  address     String
+  building    String?
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // リレーション
+  appointments    Appointment[]
+  prescriptions   Prescription[]
+  payments        Payment[]
+  consultationHistory ConsultationHistory[]
+
+  @@map("patients")
+}
+
+// Gender: MALE, FEMALE, OTHER
+
+// クリニック情報
+model Clinic {
+  id                String        @id @default(cuid())
+  userId            String        @unique
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clinicName        String
+  doctorName        String
+  medicalLicenseNumber String
+  phone             String
+  zipCode           String
+  prefecture        String
+  city              String
+  address           String
+  building          String?
+  status            String        @default("PENDING")
+  isActive          Boolean       @default(false)
+  registrationFee   Int           @default(0)
+  annualFee         Int           @default(0)
+  subscriptionExpiry DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // アップロードファイル
+  medicalLicenseFront String?
+  medicalLicenseBack  String?
+  clinicRegistration  String?
+  doctorPhoto         String?
+
+  // リレーション
+  specialties         ClinicSpecialty[]
+  appointments        Appointment[]
+  availableSlots      AvailableSlot[]
+  prescriptions       Prescription[]
+  medications         ClinicMedication[]
+  consultationHistory ConsultationHistory[]
+  payments            Payment[]
+
+  @@map("clinics")
+}
+
+// ClinicStatus: PENDING, APPROVED, REJECTED, SUSPENDED
+
+// 診療科目
+model Specialty {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // リレーション
+  clinics ClinicSpecialty[]
+
+  @@map("specialties")
+}
+
+// クリニックと診療科目の中間テーブル
+model ClinicSpecialty {
+  id          String   @id @default(cuid())
+  clinicId    String
+  specialtyId String
+  clinic      Clinic   @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  specialty   Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([clinicId, specialtyId])
+  @@map("clinic_specialties")
+}
+
+// 予約可能時間枠
+model AvailableSlot {
+  id        String   @id @default(cuid())
+  clinicId  String
+  clinic    Clinic   @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  dayOfWeek Int      // 0=日曜日, 1=月曜日, ...
+  startTime String   // "09:00"
+  endTime   String   // "17:00"
+  duration  Int      // 診察時間（分）
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("available_slots")
+}
+
+// 予約
+model Appointment {
+  id              String            @id @default(cuid())
+  patientId       String
+  clinicId        String
+  patient         Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  clinic          Clinic            @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  appointmentDate DateTime
+  startTime       String
+  endTime         String
+  status          String            @default("SCHEDULED")
+  symptoms        String?           // 症状・問診内容
+  notes           String?
+  videoRoomId     String?           // ビデオ通話ルームID
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // リレーション
+  consultationHistory ConsultationHistory?
+  prescriptions       Prescription[]
+
+  @@map("appointments")
+}
+
+// AppointmentStatus: SCHEDULED, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED, NO_SHOW
+
+// 診察履歴
+model ConsultationHistory {
+  id            String      @id @default(cuid())
+  appointmentId String      @unique
+  patientId     String
+  clinicId      String
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  patient       Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  clinic        Clinic      @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  diagnosis     String?     // 診断内容
+  treatment     String?     // 治療内容
+  notes         String?     // 医師のメモ
+  duration      Int?        // 診察時間（分）
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("consultation_history")
+}
+
+// 薬品マスタ
+model Medication {
+  id          String   @id @default(cuid())
+  name        String
+  dosage      String   // 用量（25mg, 50mg等）
+  category    String   // カテゴリ（ED治療薬、AGA治療薬等）
+  description String?
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // リレーション
+  clinicMedications ClinicMedication[]
+  prescriptionItems PrescriptionItem[]
+
+  @@map("medications")
+}
+
+// クリニック別薬品設定
+model ClinicMedication {
+  id           String     @id @default(cuid())
+  clinicId     String
+  medicationId String
+  clinic       Clinic     @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  medication   Medication @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+  price        Int        // クリニック設定価格
+  isAvailable  Boolean    @default(true)
+  description  String?    // クリニック独自の説明
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([clinicId, medicationId])
+  @@map("clinic_medications")
+}
+
+// 処方箋
+model Prescription {
+  id            String             @id @default(cuid())
+  appointmentId String?
+  patientId     String
+  clinicId      String
+  appointment   Appointment?       @relation(fields: [appointmentId], references: [id])
+  patient       Patient            @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  clinic        Clinic             @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  status        String             @default("PRESCRIBED")
+  totalAmount   Int                @default(0)
+  consultationFee Int              @default(0)
+  shippingFee   Int                @default(0)
+  notes         String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  // リレーション
+  items    PrescriptionItem[]
+  payment  Payment?
+  shipping Shipping?
+
+  @@map("prescriptions")
+}
+
+// PrescriptionStatus: PRESCRIBED, PAID, SHIPPED, DELIVERED, CANCELLED
+
+// 処方薬品詳細
+model PrescriptionItem {
+  id             String       @id @default(cuid())
+  prescriptionId String
+  medicationId   String
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  medication     Medication   @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+  quantity       Int
+  unitPrice      Int
+  totalPrice     Int
+  instructions   String?      // 服用方法
+  createdAt      DateTime     @default(now())
+
+  @@map("prescription_items")
+}
+
+// 決済情報
+model Payment {
+  id             String        @id @default(cuid())
+  prescriptionId String        @unique
+  patientId      String
+  clinicId       String
+  prescription   Prescription  @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  patient        Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  clinic         Clinic        @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  amount         Int
+  status         String        @default("PENDING")
+  paymentMethod  String?       // クレジットカード、PayPay等
+  stripePaymentIntentId String?
+  paidAt         DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+// PaymentStatus: PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED
+
+// 配送情報
+model Shipping {
+  id             String         @id @default(cuid())
+  prescriptionId String         @unique
+  prescription   Prescription   @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  trackingNumber String?
+  carrier        String?        // 配送業者
+  status         String         @default("PREPARING")
+  shippedAt      DateTime?
+  deliveredAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@map("shipping")
+}
+
+// ShippingStatus: PREPARING, SHIPPED, IN_TRANSIT, DELIVERED, RETURNED
+
+// 管理者情報
+model Admin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  role      String    @default("STAFF")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // リレーション
+  notifications NotificationSent[]
+
+  @@map("admins")
+}
+
+// AdminRole: SUPER_ADMIN, ADMIN, STAFF
+
+// お知らせ
+model Notification {
+  id          String             @id @default(cuid())
+  title       String
+  content     String
+  targetType  String
+  isActive    Boolean            @default(true)
+  publishedAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  // リレーション
+  sent NotificationSent[]
+
+  @@map("notifications")
+}
+
+// NotificationTarget: ALL_PATIENTS, ALL_CLINICS, SPECIFIC
+
+// お知らせ送信履歴
+model NotificationSent {
+  id             String       @id @default(cuid())
+  notificationId String
+  adminId        String
+  targetUserId   String?      // 特定ユーザーの場合
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  admin          Admin        @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  sentAt         DateTime     @default(now())
+
+  @@map("notification_sent")
+}
+
+// 広告
+model Advertisement {
+  id          String    @id @default(cuid())
+  title       String
+  content     String?
+  imageUrl    String?
+  linkUrl     String?
+  targetType  String
+  position    String
+  priority    Int       @default(0)
+  isActive    Boolean   @default(true)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("advertisements")
+}
+
+// AdTarget: PATIENTS, CLINICS
+// AdPosition: TOP_BANNER, SIDEBAR, CLINIC_SIDEBAR, PATIENT_SIDEBAR
+
+// システム設定
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_settings")
+}
