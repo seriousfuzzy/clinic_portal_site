@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { EnvelopeIcon, PhoneIcon, MapPinIcon } from '@heroicons/react/24/outline'
+import { Input, Select } from '@/components/ui'
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -169,72 +170,53 @@ export default function ContactPage() {
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                        お名前 *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        required
-                        value={formData.name}
-                        onChange={handleChange}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                        メールアドレス *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="userType" className="block text-sm font-medium text-gray-700 mb-2">
-                      お問い合わせ種別 *
-                    </label>
-                    <select
-                      name="userType"
-                      id="userType"
-                      required
-                      value={formData.userType}
-                      onChange={handleChange}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="patient">患者として</option>
-                      <option value="clinic">クリニックとして</option>
-                      <option value="general">一般的なお問い合わせ</option>
-                      <option value="technical">技術的なお問い合わせ</option>
-                      <option value="business">事業提携について</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                      件名 *
-                    </label>
-                    <input
+                    <Input
                       type="text"
-                      name="subject"
-                      id="subject"
+                      name="name"
+                      id="name"
+                      label="お名前 *"
                       required
-                      value={formData.subject}
+                      value={formData.name}
                       onChange={handleChange}
-                      placeholder="お問い合わせの件名を入力してください"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    />
+
+                    <Input
+                      type="email"
+                      name="email"
+                      id="email"
+                      label="メールアドレス *"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
                     />
                   </div>
+
+                  <Select
+                    name="userType"
+                    id="userType"
+                    label="お問い合わせ種別 *"
+                    required
+                    value={formData.userType}
+                    onChange={handleChange}
+                    options={[
+                      { value: 'patient', label: '患者として' },
+                      { value: 'clinic', label: 'クリニックとして' },
+                      { value: 'general', label: '一般的なお問い合わせ' },
+                      { value: 'technical', label: '技術的なお問い合わせ' },
+                      { value: 'business', label: '事業提携について' },
+                    ]}
+                  />
+
+                  <Input
+                    type="text"
+                    name="subject"
+                    id="subject"
+                    label="件名 *"
+                    required
+                    value={formData.subject}
+                    onChange={handleChange}
+                    placeholder="お問い合わせの件名を入力してください"
+                  />
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
@@ -248,7 +230,7 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="お問い合わせ内容を詳しくご記入ください"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      className="block w-full rounded-lg border border-gray-300 bg-white text-base text-gray-900 placeholder:text-gray-400 py-3 px-4 shadow-sm focus:border-indigo-600 focus:ring-indigo-600 focus:outline-none"
                     />
                   </div>
 

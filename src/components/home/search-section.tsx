@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import Link from 'next/link'
+import { Select } from '@/components/ui'
 
 export function SearchSection() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -37,81 +39,40 @@ export function SearchSection() {
   }
 
   return (
-    <div className="bg-white py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            あなたに最適なクリニックを見つけよう
-          </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            お住まいの地域や診療科目から、1,200以上のクリニックを検索できます
-          </p>
-        </div>
+    <div className="bg-white">
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* 都道府県選択 */}
+            <Select
+              id="prefecture"
+              label="都道府県"
+              value={selectedPrefecture}
+              onChange={(e) => setSelectedPrefecture(e.target.value)}
+              options={[
+                { value: '', label: 'すべて' },
+                ...prefectures.map((pref) => ({ value: pref, label: pref })),
+              ]}
+            />
 
-        <div className="mt-12 max-w-5xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-              {/* 検索キーワード */}
-              <div className="md:col-span-2">
-                <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                  🔍 キーワード検索
-                </label>
-                <input
-                  type="text"
-                  id="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="クリニック名、医師名、症状など"
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3 px-4"
-                />
-              </div>
+            {/* 診療科目選択 */}
+            <Select
+              id="specialty"
+              label="診療科"
+              value={selectedSpecialty}
+              onChange={(e) => setSelectedSpecialty(e.target.value)}
+              options={[
+                { value: '', label: 'すべて' },
+                ...specialties.map((spec) => ({ value: spec, label: spec })),
+              ]}
+            />
 
-              {/* 都道府県選択 */}
-              <div>
-                <label htmlFor="prefecture" className="block text-sm font-medium text-gray-700 mb-2">
-                  📍 都道府県
-                </label>
-                <select
-                  id="prefecture"
-                  value={selectedPrefecture}
-                  onChange={(e) => setSelectedPrefecture(e.target.value)}
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3 px-4"
-                >
-                  <option value="">全国</option>
-                  {prefectures.map((prefecture) => (
-                    <option key={prefecture} value={prefecture}>
-                      {prefecture}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* 診療科目選択 */}
-              <div>
-                <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 mb-2">
-                  🏥 診療科目
-                </label>
-                <select
-                  id="specialty"
-                  value={selectedSpecialty}
-                  onChange={(e) => setSelectedSpecialty(e.target.value)}
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3 px-4"
-                >
-                  <option value="">すべて</option>
-                  {specialties.map((specialty) => (
-                    <option key={specialty} value={specialty}>
-                      {specialty}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="mt-8 text-center">
+            {/* 検索ボタン */}
+            <div className="flex items-end">
               <button
                 onClick={handleSearch}
                 disabled={isSearching}
-                className="inline-flex items-center rounded-lg bg-indigo-600 px-8 py-4 text-base font-semibold text-white shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full inline-flex items-center justify-center rounded-lg bg-indigo-600 px-6 py-2 text-base font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 {isSearching ? (
                   <>
@@ -121,29 +82,10 @@ export function SearchSection() {
                 ) : (
                   <>
                     <MagnifyingGlassIcon className="mr-2 h-5 w-5" />
-                    クリニックを検索
+                    検索
                   </>
                 )}
               </button>
-            </div>
-          </div>
-
-          {/* 人気の検索キーワード */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-600 mb-4">人気の検索キーワード</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {['ED治療', 'AGA治療', 'ピル処方', '美容皮膚科', 'ダイエット外来'].map((keyword) => (
-                <button
-                  key={keyword}
-                  onClick={() => {
-                    setSelectedSpecialty(keyword)
-                    handleSearch()
-                  }}
-                  className="inline-flex items-center rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition-colors"
-                >
-                  {keyword}
-                </button>
-              ))}
             </div>
           </div>
         </div>
