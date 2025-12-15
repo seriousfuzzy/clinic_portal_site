@@ -2,8 +2,6 @@ import Link from 'next/link'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { HowItWorksSection } from '@/components/home/how-it-works-section'
-import { SymptomCheckerSection } from '@/components/home/symptom-checker-section'
-import { MedicationNotebookSection } from '@/components/home/medication-notebook-section'
 
 export default function HowToUsePage() {
   return (
@@ -15,7 +13,7 @@ export default function HowToUsePage() {
             <p className="text-sm text-indigo-600 font-semibold">ご利用方法</p>
             <h1 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">オンライン診療の使い方</h1>
             <p className="mt-4 text-lg text-gray-600">
-              予約から診察、お薬の受け取りまでの流れと、便利な機能をご紹介します。
+              予約から診察までの流れをご紹介します。
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
               <Link href="/patient/register" className="px-6 py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
@@ -29,8 +27,6 @@ export default function HowToUsePage() {
         </div>
 
         <HowItWorksSection />
-        <SymptomCheckerSection />
-        <MedicationNotebookSection />
       </main>
       <Footer />
     </div>
