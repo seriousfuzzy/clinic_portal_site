@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Input, Select } from '@/components/ui'
 
 export default function SignInPage() {
   const [email, setEmail] = useState('')
@@ -58,54 +59,37 @@ export default function SignInPage() {
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="role" className="sr-only">
-                ユーザータイプ
-              </label>
-              <select
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              >
-                <option value="PATIENT">患者</option>
-                <option value="CLINIC">クリニック</option>
-                <option value="ADMIN">管理者</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="email" className="sr-only">
-                メールアドレス
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="relative block w-full border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="メールアドレス"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                パスワード
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="パスワード"
-              />
-            </div>
+          <div className="space-y-4">
+            <Select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              options={[
+                { value: 'PATIENT', label: '患者' },
+                { value: 'CLINIC', label: 'クリニック' },
+                { value: 'ADMIN', label: '管理者' },
+              ]}
+            />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="メールアドレス"
+            />
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="パスワード"
+            />
           </div>
 
           {error && (

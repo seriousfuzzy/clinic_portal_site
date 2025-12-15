@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Input, Select } from '@/components/ui'
 
 export default function ClinicRegisterPage() {
   const [step, setStep] = useState(1)
@@ -177,49 +178,34 @@ export default function ClinicRegisterPage() {
                 <div className="border-b border-gray-200 pb-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">アカウント情報</h3>
                   <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                        メールアドレス *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
+                    <Input
+                      type="email"
+                      name="email"
+                      id="email"
+                      label="メールアドレス *"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                          パスワード *
-                        </label>
-                        <input
-                          type="password"
-                          name="password"
-                          id="password"
-                          required
-                          value={formData.password}
-                          onChange={handleChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                          パスワード確認 *
-                        </label>
-                        <input
-                          type="password"
-                          name="confirmPassword"
-                          id="confirmPassword"
-                          required
-                          value={formData.confirmPassword}
-                          onChange={handleChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        />
-                      </div>
+                      <Input
+                        type="password"
+                        name="password"
+                        id="password"
+                        label="パスワード *"
+                        required
+                        value={formData.password}
+                        onChange={handleChange}
+                      />
+                      <Input
+                        type="password"
+                        name="confirmPassword"
+                        id="confirmPassword"
+                        label="パスワード確認 *"
+                        required
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                      />
                     </div>
                   </div>
                 </div>
@@ -228,65 +214,45 @@ export default function ClinicRegisterPage() {
                 <div className="border-b border-gray-200 pb-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">クリニック情報</h3>
                   <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <label htmlFor="clinicName" className="block text-sm font-medium text-gray-700">
-                        クリニック名 *
-                      </label>
-                      <input
-                        type="text"
-                        name="clinicName"
-                        id="clinicName"
-                        required
-                        value={formData.clinicName}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
+                    <Input
+                      type="text"
+                      name="clinicName"
+                      id="clinicName"
+                      label="クリニック名 *"
+                      required
+                      value={formData.clinicName}
+                      onChange={handleChange}
+                    />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="doctorName" className="block text-sm font-medium text-gray-700">
-                          医師名 *
-                        </label>
-                        <input
-                          type="text"
-                          name="doctorName"
-                          id="doctorName"
-                          required
-                          value={formData.doctorName}
-                          onChange={handleChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="medicalLicenseNumber" className="block text-sm font-medium text-gray-700">
-                          医籍登録番号 *
-                        </label>
-                        <input
-                          type="text"
-                          name="medicalLicenseNumber"
-                          id="medicalLicenseNumber"
-                          required
-                          value={formData.medicalLicenseNumber}
-                          onChange={handleChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                        電話番号 *
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        id="phone"
+                      <Input
+                        type="text"
+                        name="doctorName"
+                        id="doctorName"
+                        label="医師名 *"
                         required
-                        value={formData.phone}
+                        value={formData.doctorName}
                         onChange={handleChange}
-                        placeholder="03-1234-5678"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                      <Input
+                        type="text"
+                        name="medicalLicenseNumber"
+                        id="medicalLicenseNumber"
+                        label="医籍登録番号 *"
+                        required
+                        value={formData.medicalLicenseNumber}
+                        onChange={handleChange}
                       />
                     </div>
+                    <Input
+                      type="tel"
+                      name="phone"
+                      id="phone"
+                      label="電話番号 *"
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="03-1234-5678"
+                    />
                   </div>
                 </div>
 
@@ -295,84 +261,58 @@ export default function ClinicRegisterPage() {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">住所情報</h3>
                   <div className="grid grid-cols-1 gap-4">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div>
-                        <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
-                          郵便番号 *
-                        </label>
-                        <input
-                          type="text"
-                          name="zipCode"
-                          id="zipCode"
-                          required
-                          value={formData.zipCode}
-                          onChange={handleZipCodeChange}
-                          placeholder="1234567"
-                          maxLength={7}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        />
-                      </div>
+                      <Input
+                        type="text"
+                        name="zipCode"
+                        id="zipCode"
+                        label="郵便番号 *"
+                        required
+                        value={formData.zipCode}
+                        onChange={handleZipCodeChange}
+                        placeholder="1234567"
+                        maxLength={7}
+                      />
                       <div className="sm:col-span-2">
-                        <label htmlFor="prefecture" className="block text-sm font-medium text-gray-700">
-                          都道府県 *
-                        </label>
-                        <select
+                        <Select
                           name="prefecture"
                           id="prefecture"
+                          label="都道府県 *"
                           required
                           value={formData.prefecture}
                           onChange={handleChange}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        >
-                          <option value="">選択してください</option>
-                          {prefectures.map((prefecture) => (
-                            <option key={prefecture} value={prefecture}>
-                              {prefecture}
-                            </option>
-                          ))}
-                        </select>
+                          options={[
+                            { value: '', label: '選択してください' },
+                            ...prefectures.map((pref) => ({ value: pref, label: pref })),
+                          ]}
+                        />
                       </div>
                     </div>
-                    <div>
-                      <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-                        市区町村 *
-                      </label>
-                      <input
-                        type="text"
-                        name="city"
-                        id="city"
-                        required
-                        value={formData.city}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                        番地 *
-                      </label>
-                      <input
-                        type="text"
-                        name="address"
-                        id="address"
-                        required
-                        value={formData.address}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="building" className="block text-sm font-medium text-gray-700">
-                        建物名・部屋番号
-                      </label>
-                      <input
-                        type="text"
-                        name="building"
-                        id="building"
-                        value={formData.building}
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
+                    <Input
+                      type="text"
+                      name="city"
+                      id="city"
+                      label="市区町村 *"
+                      required
+                      value={formData.city}
+                      onChange={handleChange}
+                    />
+                    <Input
+                      type="text"
+                      name="address"
+                      id="address"
+                      label="番地 *"
+                      required
+                      value={formData.address}
+                      onChange={handleChange}
+                    />
+                    <Input
+                      type="text"
+                      name="building"
+                      id="building"
+                      label="建物名・部屋番号"
+                      value={formData.building}
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
 

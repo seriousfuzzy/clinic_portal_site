@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { MagnifyingGlassIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { Input, Select } from '@/components/ui'
 
 interface Clinic {
   id: string
@@ -85,56 +86,37 @@ function SearchContent() {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="md:col-span-2">
-                <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-                  🔍 キーワード検索
-                </label>
-                <input
+                <Input
                   type="text"
                   id="search"
+                  label="🔍 キーワード検索"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="クリニック名、医師名、症状など"
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3 px-4"
                 />
               </div>
 
-              <div>
-                <label htmlFor="prefecture" className="block text-sm font-medium text-gray-700 mb-2">
-                  📍 都道府県
-                </label>
-                <select
-                  id="prefecture"
-                  value={selectedPrefecture}
-                  onChange={(e) => setSelectedPrefecture(e.target.value)}
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3 px-4"
-                >
-                  <option value="">すべて</option>
-                  {prefectures.map((prefecture) => (
-                    <option key={prefecture} value={prefecture}>
-                      {prefecture}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                id="prefecture"
+                label="📍 都道府県"
+                value={selectedPrefecture}
+                onChange={(e) => setSelectedPrefecture(e.target.value)}
+                options={[
+                  { value: '', label: 'すべて' },
+                  ...prefectures.map((prefecture) => ({ value: prefecture, label: prefecture })),
+                ]}
+              />
 
-              <div>
-                <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 mb-2">
-                  🏥 診療科目
-                </label>
-                <select
-                  id="specialty"
-                  value={selectedSpecialty}
-                  onChange={(e) => setSelectedSpecialty(e.target.value)}
-                  className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-3 px-4"
-                >
-                  <option value="">すべて</option>
-                  {specialties.map((specialty) => (
-                    <option key={specialty} value={specialty}>
-                      {specialty}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <Select
+                id="specialty"
+                label="🏥 診療科目"
+                value={selectedSpecialty}
+                onChange={(e) => setSelectedSpecialty(e.target.value)}
+                options={[
+                  { value: '', label: 'すべて' },
+                  ...specialties.map((specialty) => ({ value: specialty, label: specialty })),
+                ]}
+              />
             </div>
 
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-between">
@@ -148,12 +130,16 @@ function SearchContent() {
               
               <div className="mt-4 sm:mt-0 flex items-center text-sm text-gray-600">
                 <span className="mr-4">並び替え:</span>
-                <select className="rounded-md border-gray-300 text-sm">
-                  <option>おすすめ順</option>
-                  <option>評価順</option>
-                  <option>料金安い順</option>
-                  <option>新着順</option>
-                </select>
+                <Select
+                  options={[
+                    { value: 'recommended', label: 'おすすめ順' },
+                    { value: 'rating', label: '評価順' },
+                    { value: 'price', label: '料金安い順' },
+                    { value: 'new', label: '新着順' },
+                  ]}
+                  defaultValue="recommended"
+                  className="sm:w-48"
+                />
               </div>
             </div>
           </div>
