@@ -1,21 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Input } from '@/components/ui'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 
-export default function SignInPage() {
-  const searchParams = useSearchParams()
+export default function ClinicLoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const role = searchParams.get('role') || 'PATIENT' // デフォルトは患者
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,19 +24,14 @@ export default function SignInPage() {
       const result = await signIn('credentials', {
         email,
         password,
-        role: role as string,
+        role: 'CLINIC',
         redirect: false,
       })
 
       if (result?.error) {
         setError('メールアドレスまたはパスワードが正しくありません')
       } else {
-        // 患者のみリダイレクト
-        if (role === 'PATIENT') {
-          router.push('/patient/dashboard')
-        } else {
-          setError('クリニックのログインは別のページから行ってください')
-        }
+        router.push('/clinic/dashboard')
       }
     } catch (error) {
       setError('ログインに失敗しました')
@@ -54,15 +47,15 @@ export default function SignInPage() {
         <div className="max-w-md w-full space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              患者ログイン
+              クリニックログイン
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              患者登録をすると、登録済みのクリニック全てで診察を受けることができます
+              クリニック登録がお済みの方はこちらからログインしてください
             </p>
             <p className="mt-2 text-center text-sm text-gray-600">
               まだ登録されていない方は{' '}
-              <Link href="/patient/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-                患者登録はこちら
+              <Link href="/clinic/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                クリニック登録はこちら
               </Link>
             </p>
           </div>
@@ -118,3 +111,4 @@ export default function SignInPage() {
     </div>
   )
 }
+

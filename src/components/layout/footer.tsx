@@ -1,6 +1,10 @@
+'use client'
+
 import Link from 'next/link'
+import { useSession, signOut } from 'next-auth/react'
 
 export function Footer() {
+  const { data: session } = useSession()
   const navigation = {
     patients: [
       { name: '患者登録', href: '/patient/register' },
@@ -41,13 +45,13 @@ export function Footer() {
                 <span className="text-white font-bold text-sm">🏥</span>
               </div>
               <span className="text-xl font-bold text-white">
-                オンラインクリニック
+                オンクリ
               </span>
             </div>
             <p className="text-sm leading-6 text-gray-300">
-              いつもの医療が変わるプラットフォーム。<br />
-              全国のクリニックと患者をつなぎ、<br />
-              より良い医療体験を提供します。
+              あなたの地域のオンクリ・オンクリのポータルサイト<br />
+              地域密着のオンクリ<br />
+              いつもの医療が変わるプラットフォーム
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-gray-300">
@@ -88,6 +92,23 @@ export function Footer() {
                       </Link>
                     </li>
                   ))}
+                  {session && session.user.role === 'CLINIC' && (
+                    <>
+                      <li>
+                        <Link href="/clinic/dashboard" className="text-sm leading-6 text-gray-300 hover:text-white">
+                          ダッシュボード
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => signOut()}
+                          className="text-sm leading-6 text-gray-300 hover:text-white text-left"
+                        >
+                          ログアウト
+                        </button>
+                      </li>
+                    </>
+                  )}
                 </ul>
               </div>
             </div>
@@ -122,7 +143,7 @@ export function Footer() {
         <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
           <div className="flex flex-col items-center justify-between sm:flex-row">
             <p className="text-xs leading-5 text-gray-400">
-              &copy; 2024 オンラインクリニックポータル株式会社. All rights reserved.
+              &copy; 2024 オンクリ. All rights reserved.
             </p>
             <div className="mt-4 sm:mt-0">
               <p className="text-xs leading-5 text-gray-400">

@@ -17,13 +17,13 @@ export function Hero() {
               href="/patient/register"
               className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-700 transition-colors"
             >
-              患者として始める
+              患者登録
             </Link>
             <Link
-              href="/clinic/register"
+              href="/pricing"
               className="inline-flex items-center justify-center rounded-lg border-2 border-indigo-600 px-8 py-4 text-base font-semibold text-indigo-600 hover:bg-indigo-600 hover:text-white transition-colors"
             >
-              クリニック登録
+              クリニック登録について
             </Link>
           </div>
         </div>
