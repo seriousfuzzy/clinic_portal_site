@@ -1,8 +1,11 @@
 import { Header } from '@/components/layout/header'
 import { Hero } from '@/components/home/hero'
+import { HeroBanner } from '@/components/home/hero-banner'
+import { ClinicBannerSlider } from '@/components/home/clinic-banner-slider'
 import { SearchSection } from '@/components/home/search-section'
 import { PrefectureList } from '@/components/home/prefecture-list'
 import { SpecialtyList } from '@/components/home/specialty-list'
+import { FreeMedicalSearchSection } from '@/components/home/free-medical-search-section'
 import { FeatureSearchSection } from '@/components/home/feature-search-section'
 import { HowItWorksSection } from '@/components/home/how-it-works-section'
 import { CTASection } from '@/components/home/cta-section'
@@ -13,7 +16,9 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <Header />
       <main>
+        <HeroBanner />
         <Hero />
+        <ClinicBannerSlider />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">病院・診療所をさがす</h2>
           <div className="mb-12">
@@ -23,6 +28,9 @@ export default function HomePage() {
               </a>
               <a href="#specialty" className="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
                 診療科からさがす
+              </a>
+              <a href="#free-medical" className="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
+                自由診療からさがす
               </a>
               <a href="#feature" className="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors">
                 特徴からさがす
@@ -37,7 +45,10 @@ export default function HomePage() {
         <div id="specialty" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-gray-50">
           <SpecialtyList />
         </div>
-        <div id="feature" className="py-16">
+        <div id="free-medical" className="py-16">
+          <FreeMedicalSearchSection />
+        </div>
+        <div id="feature" className="py-16 bg-gray-50">
           <FeatureSearchSection />
         </div>
         <HowItWorksSection />

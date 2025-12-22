@@ -41,6 +41,10 @@ export default function PatientDashboard() {
 
   const fetchDashboardData = async () => {
     try {
+      // 注意: 患者の診察履歴は、他のクリニックに共有されません。
+      // 各クリニックは独立したカルテ管理を行い、患者の個人情報（免許書、健康保険証など）のみが表示されます。
+      // 診察履歴は各クリニックのカルテで確認できます。
+      // 患者ダッシュボードには、予約情報と現在のクリニックでの処方情報のみを表示します。
       const [appointmentsRes, prescriptionsRes] = await Promise.all([
         fetch('/api/patient/appointments'),
         fetch('/api/patient/prescriptions')
@@ -48,11 +52,13 @@ export default function PatientDashboard() {
 
       if (appointmentsRes.ok) {
         const appointmentsData = await appointmentsRes.json()
+        // 予約情報は表示しますが、診察内容の詳細は各クリニックのカルテにのみ保存されます
         setAppointments(appointmentsData.appointments)
       }
 
       if (prescriptionsRes.ok) {
         const prescriptionsData = await prescriptionsRes.json()
+        // 処方履歴は表示しますが、他のクリニックの処方内容は共有されません
         setPrescriptions(prescriptionsData.prescriptions)
       }
     } catch (error) {

@@ -27,7 +27,7 @@ export function Header() {
                 <span className="text-white font-bold text-sm">🏥</span>
               </div>
               <span className="text-xl font-bold text-gray-900">
-                オンラインクリニック
+                オンクリ
               </span>
             </Link>
           </div>
@@ -48,39 +48,19 @@ export function Header() {
           {/* User menu */}
           <div className="ml-6 flex items-center space-x-3">
             {session ? (
-              <div className="flex items-center space-x-3">
-                <Link
-                  href={
-                    session.user.role === 'PATIENT' ? '/patient/dashboard' :
-                    session.user.role === 'CLINIC' ? '/clinic/dashboard' :
-                    '/admin/dashboard'
-                  }
-                  className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors px-3 py-2 rounded-md hover:bg-indigo-50"
-                >
-                  ダッシュボード
-                </Link>
-                <button
-                  onClick={() => signOut()}
-                  className="text-sm font-medium text-gray-600 hover:text-red-600 transition-colors px-3 py-2 rounded-md hover:bg-red-50"
-                >
-                  ログアウト
-                </button>
-              </div>
+              <Link
+                href="/patient/dashboard"
+                className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors px-4 py-2 rounded-md hover:bg-indigo-50"
+              >
+                患者ログイン
+              </Link>
             ) : (
-              <>
-                <Link
-                  href="/auth/signin"
-                  className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors px-4 py-2 rounded-md hover:bg-indigo-50"
-                >
-                  ログイン
-                </Link>
-                <Link
-                  href="/auth/signup"
-                  className="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all duration-200"
-                >
-                  新規登録
-                </Link>
-              </>
+              <Link
+                href="/auth/signin?role=PATIENT"
+                className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors px-4 py-2 rounded-md hover:bg-indigo-50"
+              >
+                患者ログイン
+              </Link>
             )}
           </div>
 
@@ -104,7 +84,7 @@ export function Header() {
               <div className="flex items-center justify-between">
                 <Link href="/" className="-m-1.5 p-1.5">
                   <span className="text-xl font-bold text-indigo-600">
-                    オンラインクリニック
+                    オンクリ
                   </span>
                 </Link>
                 <button
@@ -130,47 +110,13 @@ export function Header() {
                     ))}
                   </div>
                   <div className="py-6">
-                    {session ? (
-                      <div className="space-y-2">
-                        <Link
-                          href={
-                            session.user.role === 'PATIENT' ? '/patient/dashboard' :
-                            session.user.role === 'CLINIC' ? '/clinic/dashboard' :
-                            '/admin/dashboard'
-                          }
-                          className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          ダッシュボード
-                        </Link>
-                        <button
-                          onClick={() => {
-                            signOut()
-                            setMobileMenuOpen(false)
-                          }}
-                          className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 w-full text-left"
-                        >
-                          ログアウト
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <Link
-                          href="/auth/signin"
-                          className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          ログイン
-                        </Link>
-                        <Link
-                          href="/auth/signup"
-                          className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-indigo-600 hover:bg-gray-50"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          新規登録
-                        </Link>
-                      </div>
-                    )}
+                    <Link
+                      href={session ? "/patient/dashboard" : "/auth/signin?role=PATIENT"}
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      患者ログイン
+                    </Link>
                   </div>
                 </div>
               </div>
